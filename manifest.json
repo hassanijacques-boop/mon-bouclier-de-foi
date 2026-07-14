@@ -2,7 +2,7 @@
   "short_name": "Bouclier de Foi",
   "name": "Mon Bouclier de Foi",
   "description": "Dhikr, Invocations et Roqya authentique — Coran et Sunnah.",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#021c15",
   "theme_color": "#021c15",

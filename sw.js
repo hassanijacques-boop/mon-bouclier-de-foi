@@ -1,6 +1,8 @@
-/* Mon Bouclier de Foi — minimal service worker for PWA install + offline shell */
+/* Mon Bouclier de Foi — service worker compatible GitHub Pages */
+const BASE = self.location.pathname.replace(/\/sw\.js$/, "") + "/";
+
 const CACHE = "mbdf-v1";
-const SHELL = ["/", "/manifest.json", "/icon.svg"];
+const SHELL = [BASE, BASE + "manifest.json", BASE + "icon.svg"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)));
@@ -19,9 +21,8 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
-  const url = new URL(req.url);
-  // Network-first for /api, cache-first for everything else
-  if (url.pathname.startsWith("/api")) {
+  // Network-first for API calls, cache-first for everything else
+  if (req.url.includes("/api")) {
     event.respondWith(fetch(req).catch(() => caches.match(req)));
   } else {
     event.respondWith(
@@ -36,17 +37,17 @@ self.addEventListener("message", (event) => {
     const { title, body } = event.data;
     self.registration.showNotification(title, {
       body,
-      icon: "/icon.svg",
-      badge: "/icon.svg",
+      icon: BASE + "icon.svg",
+      badge: BASE + "icon.svg",
       tag: "adhkar-reminder",
-      data: { url: event.data.url || "/dhikr" },
+      data: { url: event.data.url || BASE + "dhikr" },
     });
   }
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const targetUrl = event.notification.data?.url || "/dhikr";
+  const targetUrl = event.notification.data?.url || BASE + "dhikr";
   event.waitUntil(
     self.clients.matchAll({ type: "window" }).then((clients) => {
       for (const c of clients) {

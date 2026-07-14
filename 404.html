@@ -2,7 +2,6 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8"/>
-  <link rel="icon" href="favicon.ico"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
   <meta name="theme-color" content="#021c15"/>
   <meta name="description" content="Mon Bouclier de Foi — Dhikr, Invocations et Roqya authentique, basés sur le Coran et la Sunnah."/>
@@ -17,6 +16,7 @@
   <title>Mon Bouclier de Foi</title>
   <script defer="defer" src="static/js/main.d1829f17.js"></script>
   <link href="static/css/main.7517a48c.css" rel="stylesheet">
+  <script>sessionStorage.redirect = location.href;</script>
 </head>
 <body>
   <noscript>Vous devez activer JavaScript pour utiliser cette application.</noscript>
@@ -27,6 +27,13 @@
         navigator.serviceWorker.register('sw.js').catch(() => {});
       });
     }
+    (function() {
+      var redirect = sessionStorage.redirect;
+      delete sessionStorage.redirect;
+      if (redirect && redirect !== location.href) {
+        history.replaceState(null, null, redirect);
+      }
+    })();
   </script>
 </body>
 </html>
